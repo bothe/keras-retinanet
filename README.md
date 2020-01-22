@@ -3,9 +3,36 @@
 Keras implementation of RetinaNet object detection as described in [Focal Loss for Dense Object Detection](https://arxiv.org/abs/1708.02002)
 by Tsung-Yi Lin, Priya Goyal, Ross Girshick, Kaiming He and Piotr Dollár.
 
+## What am I trying to do?
+
+To create binding for inference module so that it can be used for production, perhaps, at least with Android apps.
+
+An example of testing the network can be seen in [this script](/examples/ResNet50RetinaNet.py) (I am trying to work around this).
+
+The given converter did not work:
+```
+model_converted = keras_retinanet.models.convert_model(model)
+```
+
+Hence, to convert model to the .pb file and load, here is what I tried that worked:
+```
+# for resnet50
+pb_model_path = "model.pb"
+model.save(pb_model_path)
+
+# then load with keras and custom_objects
+keras.models.load_model(pb_model_path, custom_objects=models.backbone('resnet50').custom_objects)
+```
+
+Now the **question** is **_How to port it to the Android app?_**, given that it has ```custom_objects```.
+
+On the other hand, it seems to be very slow compared to YOLO model that I tried before.
+So not sure how it will perform on the low resource Android devices.
+Any comments? Welcome!
+
 ## Warning
 
-This repository is migrating to (tf-retinanet)[https://github.com/fizyr/tf-retinanet], a `tf.keras` porting of `keras-retinanet`.
+This repository is migrating to [tf-retinanet](https://github.com/fizyr/tf-retinanet), a `tf.keras` porting of `keras-retinanet`.
 
 ## Installation
 
@@ -19,7 +46,7 @@ This repository is migrating to (tf-retinanet)[https://github.com/fizyr/tf-retin
 5) Optionally, install `pycocotools` if you want to train / test on the MS COCO dataset by running `pip install --user git+https://github.com/cocodataset/cocoapi.git#subdirectory=PythonAPI`.
 
 ## Testing
-An example of testing the network can be seen in [this Notebook](https://github.com/delftrobotics/keras-retinanet/blob/master/examples/ResNet50RetinaNet.ipynb).
+An example of testing the network can be seen in [this Notebook](/examples/ResNet50RetinaNet.ipynb).
 In general, inference of the network works as follows:
 ```python
 boxes, scores, labels = model.predict_on_batch(inputs)
