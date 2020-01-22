@@ -42,8 +42,8 @@ def sort_and_plot(boxes, scores, labels, draw, scale, threshold=0.2):
     plt.show()
 
 
-def load_pb_model():
+def load_pb_model(pb_model_path):
     start = time.time()
-    pb_model = keras.models.load_model('model.pb', custom_objects=models.backbone('resnet50').custom_objects)
+    pb_model = keras.models.load_model(pb_model_path, custom_objects=models.backbone('resnet50').custom_objects)
     print("Load .pb model - processing time: ", time.time() - start)
     return pb_model

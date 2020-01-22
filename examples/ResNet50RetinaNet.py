@@ -30,12 +30,13 @@ start = time.time()
 model = models.load_model(model_path, backbone_name='resnet50')
 print("Load normal model - processing time: ", time.time() - start)
 
-if not os.path.exists('model.pb'):
+pb_model_path = 'model.pb'
+if not os.path.exists(pb_model_path):
     # Save model for TF Inference
-    model.save('model.pb')
-    pb_model = load_pb_model()
+    model.save(pb_model_path)
+    pb_model = load_pb_model(pb_model_path)
 else:
-    pb_model = load_pb_model()
+    pb_model = load_pb_model(pb_model_path)
 
 # if the model is not converted to an inference model, use the line below
 # see: https://github.com/fizyr/keras-retinanet#converting-a-training-model-to-inference-model
